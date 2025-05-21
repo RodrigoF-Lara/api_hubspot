@@ -31,7 +31,7 @@ app.post('/api/search', async (req, res) => {
     const hubspotResponse = await fetch('https://api.hubapi.com/crm/v3/objects/companies/search', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-bd7ee904-14c6-4133-a008-1d2472ed509c'}`,
+        'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-87549fcf-e71e-4b82-80fb-a4fd5865188b'}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -82,7 +82,7 @@ app.get('/company/:id', async (req, res) => {
       `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro`,
       {
         headers: {
-          'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-bd7ee904-14c6-4133-a008-1d2472ed509c'}`
+          'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-87549fcf-e71e-4b82-80fb-a4fd5865188b'}`
         }
       }
     );
