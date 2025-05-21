@@ -8,18 +8,37 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Verificação do token do HubSpot
+const getHubspotToken = () => {
+  const token = process.env.HUBSPOT_TOKEN;
+  if (!token) {
+    console.error('ERRO: Token do HubSpot não encontrado nas variáveis de ambiente');
+    return null;
+  }
+  return token;
+};
+
 // Health Check
 app.get('/api/health', (req, res) => {
+  const token = getHubspotToken();
   res.json({ 
     status: 'online', 
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    hubspot_configured: !!token
   });
 });
 
 // Rota de busca corrigida
 app.post('/api/search', async (req, res) => {
   try {
+    const token = getHubspotToken();
+    if (!token) {
+      return res.status(401).json({
+        error: "Token do HubSpot não configurado. Configure a variável de ambiente HUBSPOT_TOKEN."
+      });
+    }
+
     const { searchTerm } = req.body;
 
     if (!searchTerm || searchTerm.trim().length < 3) {
@@ -31,7 +50,7 @@ app.post('/api/search', async (req, res) => {
     const hubspotResponse = await fetch('https://api.hubapi.com/crm/v3/objects/companies/search', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-87549fcf-e71e-4b82-80fb-a4fd5865188b'}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -70,6 +89,13 @@ app.post('/api/search', async (req, res) => {
 // Rota de detalhes com validação
 app.get('/company/:id', async (req, res) => {
   try {
+    const token = getHubspotToken();
+    if (!token) {
+      return res.status(401).json({
+        error: "Token do HubSpot não configurado. Configure a variável de ambiente HUBSPOT_TOKEN."
+      });
+    }
+
     const companyId = req.params.id;
 
     if (!/^\d+$/.test(companyId)) {
@@ -82,7 +108,7 @@ app.get('/company/:id', async (req, res) => {
       `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro`,
       {
         headers: {
-          'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-87549fcf-e71e-4b82-80fb-a4fd5865188b'}`
+          'Authorization': `Bearer ${token}`
         }
       }
     );
@@ -113,4 +139,13 @@ app.listen(PORT, () => {
   console.log(`✅ Servidor operacional na porta ${PORT}`);
   console.log(`• Health Check: http://localhost:${PORT}/api/health`);
   console.log(`• Modo: ${process.env.NODE_ENV || 'desenvolvimento'}`);
+  
+  // Verificar se o token está configurado
+  const token = getHubspotToken();
+  if (!token) {
+    console.warn('⚠️ AVISO: Token do HubSpot não encontrado nas variáveis de ambiente');
+    console.warn('⚠️ Configure a variável de ambiente HUBSPOT_TOKEN para que a API funcione corretamente');
+  } else {
+    console.log('• Token do HubSpot: Configurado');
+  }
 });
