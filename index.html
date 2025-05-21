@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
     <title>Busca de Empresas</title>
-    <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=s7D3rIzZgM68knmbs7ou1iivUonhiBpU6H5Jy0AQzp9OeL-L77p98WvztOkbpcC9_J_g1dl72QFuGe2OsfVygkNmymyODEYfGWv4x1JMzY5mNGZak05y_MWuquXdizITd2e8BFKgHsDcA0jH83te1E4h_P67dCWUVgL7rTGIgPCwdMB2BGckj2iw4Vd12JspHxI4pZ_7f9IJYo95f9dbmuUlWZKfOhpaDbliX1IQUwAo50ITQIHUYG-XYOFFqOT-lRPKhxTWP7Lvsz22PQmIG2C4jFq0HgArmaAaOzoIRkiVp7bjwwCl7xkpNc9qux7P3Zi6Ou0zTW7SAoJIHY1fqn_N8CiANCmR2y1OfTQdAkgz0tW6VjkdEIBebbajP34RPckz5te0dfCH7uuHfA4A2guE3dc8w9AndDUb7eisTHhsGAg2befLKWgiw-o6eO6mUfWN5khyiHSczrl3cLRBdpaaHzZQXWyDWb2lxHDuZ4ths6zWbtjB2JdnQIeWmHKitYen5bTZbOGTlsd_DeG6P3Exe_b7995JFIckWQbse2D66Y-k3t2xIYfXyToEG2VOAfkUKHflQGMAfBaP7enSnUBOjlFqGJtla1ADRqUBFiEhmrwN0y9o_65s3z8I_os-1wah7xsH5TvGlgJSONfpSAX0p4MXygcCzlIZcgiOjLvaiZP_B3Xq4mqgS1LVnQFDGD0Ma2uFgNlz5yQaG7GM1NnproVTkEPAAuoXoTM-GfiLaKsjMVT4d0IYUSHlL55kFAHpzfiyHm4dqVvcInNnCioc0u-o9U8_68KwozVXOX8X1FNNNxwSoQacr4Vsmel_A3bblVdoTkvkEnFJJEDbw-0ll3yoRwUHRMvykY59SJY" charset="UTF-8"></script><style>
+    <style>
         /* Estilos Gerais */
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -195,10 +195,8 @@
     </div>
 
     <script>
-        // URL da API - será substituída pela URL do Vercel após o deploy
-        //'https://seu-app.vercel.app';
-        //'http://localhost:3000'; 
-        const API_URL = 'api-hubspot.vercel.app';
+        // URL da API - URL completa com protocolo HTTPS
+        const API_URL = 'https://api-hubspot.vercel.app';
         
         let timeoutId;
             
@@ -223,8 +221,21 @@
                     });
     
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+                        const errorText = await response.text();
+                        let errorMessage;
+                        
+                        try {
+                            // Tenta interpretar como JSON
+                            const errorData = JSON.parse(errorText);
+                            errorMessage = errorData.error || `Erro HTTP: ${response.status}`;
+                        } catch (e) {
+                            // Se não for JSON, usa o texto bruto ou status HTTP
+                            errorMessage = errorText.includes('<html>') 
+                                ? `Erro HTTP: ${response.status}` 
+                                : errorText;
+                        }
+                        
+                        throw new Error(errorMessage);
                     }
                     
                     const results = await response.json();
@@ -267,7 +278,23 @@
             try {
                 const response = await fetch(`${API_URL}/company/${companyId}`);
                 
-                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage;
+                    
+                    try {
+                        // Tenta interpretar como JSON
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.error || `Erro HTTP: ${response.status}`;
+                    } catch (e) {
+                        // Se não for JSON, usa o texto bruto ou status HTTP
+                        errorMessage = errorText.includes('<html>') 
+                            ? `Erro HTTP: ${response.status}` 
+                            : errorText;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
                 
                 const data = await response.json();
                 displayCompanyDetails(data);
