@@ -109,7 +109,7 @@ app.post('/api/search', async (req, res) => {
       },
       body: JSON.stringify({
         filterGroups: filterGroups,
-        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj", "codigo_cliente","address"],
+        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj", "codigo_cliente","address","inscricao_estadual"],
         limit: 10
       })
     });
@@ -153,7 +153,7 @@ app.get('/company/:id', async (req, res) => {
     }
 
     const hubspotResponse = await fetch(
-      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro,cnpj,codigo_cliente,address`,
+      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro,cnpj,codigo_cliente,address,inscricao_estadual`,
       {
         headers: {
           'Authorization': `Bearer ${token}`
