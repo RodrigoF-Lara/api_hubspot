@@ -131,7 +131,7 @@ app.get('/company/:id', async (req, res) => {
     }
 
     const hubspotResponse = await fetch(
-      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro,cnpj`,
+      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro,cnpj,codigo_cliente`,
       {
         headers: {
           'Authorization': `Bearer ${token}`
