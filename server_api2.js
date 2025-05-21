@@ -29,16 +29,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Função para verificar se o input é um CNPJ
+// Função para verificar se o input é um CNPJ (numérico ou formatado)
 function isCNPJ(input) {
-  // Remove caracteres não numéricos
-  const cnpj = input.replace(/[^\d]/g, '');
+  // Remove caracteres não numéricos para verificação
+  const cnpjNumerico = input.replace(/[^\d]/g, '');
   
   // Verifica se tem entre 8 e 14 dígitos (aceitamos CNPJs parciais também)
-  return /^\d{8,14}$/.test(cnpj);
+  return /^\d{8,14}$/.test(cnpjNumerico);
 }
 
-// Rota de busca aprimorada para nome ou CNPJ
+// Função para normalizar o CNPJ (remover formatação)
+function normalizarCNPJ(cnpj) {
+  return cnpj.replace(/[^\d]/g, '');
+}
+
+// Rota de busca aprimorada para nome ou CNPJ (formatado ou não)
 app.post('/api/search', async (req, res) => {
   try {
     const token = getHubspotToken();
@@ -60,23 +65,40 @@ app.post('/api/search', async (req, res) => {
     const isCnpjSearch = isCNPJ(searchTerm);
     
     // Cria o filtro apropriado com base no tipo de busca
-    const filterGroups = [{
-      filters: [{
-        propertyName: isCnpjSearch ? "cnpj_inteiro" : "name",
-        operator: "CONTAINS_TOKEN",
-        value: searchTerm
-      }]
-    }];
-
-    // Se for CNPJ, adiciona um segundo filtro para buscar por CNPJ formatado também
+    let filterGroups = [];
+    
     if (isCnpjSearch) {
-      filterGroups.push({
+      // Se for CNPJ, normaliza para buscar sem formatação
+      const cnpjNormalizado = normalizarCNPJ(searchTerm);
+      
+      // Adiciona filtros para diferentes formatos de CNPJ
+      filterGroups = [
+        {
+          // Busca pelo CNPJ sem formatação
+          filters: [{
+            propertyName: "cnpj_inteiro",
+            operator: "CONTAINS_TOKEN",
+            value: cnpjNormalizado
+          }]
+        },
+        {
+          // Busca pelo CNPJ formatado
+          filters: [{
+            propertyName: "cnpj",
+            operator: "CONTAINS_TOKEN",
+            value: searchTerm
+          }]
+        }
+      ];
+    } else {
+      // Se for nome, usa o filtro padrão
+      filterGroups = [{
         filters: [{
-          propertyName: "cnpj",
+          propertyName: "name",
           operator: "CONTAINS_TOKEN",
           value: searchTerm
         }]
-      });
+      }];
     }
 
     const hubspotResponse = await fetch('https://api.hubapi.com/crm/v3/objects/companies/search', {
@@ -87,7 +109,7 @@ app.post('/api/search', async (req, res) => {
       },
       body: JSON.stringify({
         filterGroups: filterGroups,
-        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj","codigo_cliente"],
+        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj", "codigo_cliente"],
         limit: 10
       })
     });
