@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <title>Busca de Empresas</title>
     <style>
         /* Estilos Gerais */
@@ -23,14 +21,40 @@
             margin: 2rem auto;
             max-width: 800px;
         }
-    
-        h1 {
-            color: #2c3e50;
-            font-weight: 600;
+        
+        /* Cabeçalho com logos */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
-            font-size: 1.8rem;
             border-bottom: 2px solid #3498db;
             padding-bottom: 0.5rem;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .logos {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            height: 30px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
         }
     
         /* Campo de Busca */
@@ -182,7 +206,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Busca de Empresas</h1>
+        <div class="header">
+            <h1>Busca de Empresas</h1>
+            <div class="logos">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxMCI+PHBhdGggZD0iTTEuNSAzLjVoMnYzaDJWMi41aC00djFtNi41LTFoLTJ2NWgyVjIuNW0yLjUgMGgtMnY1aDJ2LTJoMnYyaDJ2LTVoLTJ2Mmgtdi0yTTE1IDIuNWgtMnY1aDR2LTFoLTJ2LTRtOC41IDB2MWgydjFoLTJ2MWgydjJoMnYtNWgtNE0yNSA1LjVoMnYtM2gtMnYzbTIuNS0zaC0xdjVoMnYtNGgtMXoiIGZpbGw9IiNmZjdiMzkiLz48L3N2Zz4=" alt="Marcher Logo" class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxMCI+PHBhdGggZD0iTTEgM2gxLjV2NGgtMS41em0zIDB2NGgxLjV2LTEuNWMwLS41LjUtMSAxLTFzMSAuNSAxIDF2MS41aDEuNXYtMmMwLTEtLjgtMS44LTEuOC0xLjhzLTEuMi41LTEuMi41VjNIMy45em03LjYgMGgxLjV2NGgtMS41em0wLTJoMS41djFoLTEuNXptMi41IDJoMS41djAuNWMwLjMtMC4zIDAuOC0wLjYgMS41LTAuNiAxLjUgMCAyLjUgMSAyLjUgMi4xcy0xIDIuMS0yLjUgMi4xYy0wLjcgMC0xLjItMC4zLTEuNS0wLjZ2MC41aC0xLjV6bTIuOCAxYy0wLjcgMC0xLjMgMC41LTEuMyAxcy0wLjYgMSAwLjcgMSAxLjMtMC41IDEuMy0xIDAuNi0xLTAuNy0xem00LjIgM2gxLjV2LTRoLTEuNXptMC01aDEuNXYxaC0xLjV6bTUgMi41YzAtMC44LTAuNy0xLjUtMS41LTEuNXMtMS41IDAuNy0xLjUgMS41IDAuNyAxLjUgMS41IDEuNSAxLjUtMC43IDEuNS0xLjV6bTEuNSAwYzAgMS43LTEuMyAzLTMgM3MtMy0xLjMtMy0zIDEuMy0zIDMtMyAzIDEuMyAzIDN6IiBmaWxsPSIjZmY3YjM5Ii8+PC9zdmc+" alt="HubSpot Logo" class="logo">
+            </div>
+        </div>
         
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Digite nome da empresa ou CNPJ..." autocomplete="off">
@@ -206,55 +236,38 @@
         </div>
 
         <div id="selectedCompany" class="selected-company" style="display: none;">
-  <h2>🏢 Dados da Empresa Selecionada</h2>
+            <h2>Dados da Empresa Selecionada</h2>
+            <div class="info-item">
+                <span class="label">Nome:</span>
+                <span id="name">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">CNPJ:</span>
+                <span id="cnpj">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Código Protheus:</span>
+                <span id="codigo_cliente">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Cidade:</span>
+                <span id="city">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Estado:</span>
+                <span id="state">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Telefone:</span>
+                <span id="phone">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">E-mail:</span>
+                <span id="email">-</span>
+            </div>
+        </div>
 
-  <div class="info-item">
-    <span class="label">📛 Nome:</span>
-    <span id="name">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">🧾 CNPJ:</span>
-    <span id="cnpj">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">🏛️ Insc.Est.:</span>
-    <span id="inscricao_estadual">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">🗺️ Estado:</span>
-    <span id="state">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">🏙️ Cidade:</span>
-    <span id="city">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">📍 Endereço:</span>
-    <span id="address">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">📞 Telefone:</span>
-    <span id="phone">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">📧 E-mail:</span>
-    <span id="email">-</span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">🏷️ Código Protheus:</span>
-    <span id="codigo_cliente">-</span>
-  </div>
-</div>
-
-<div id="error-message" class="error"></div>
+        <div id="error-message" class="error"></div>
     </div>
 
     <script>
@@ -329,11 +342,6 @@
                 const estado = props.state || '';
                 const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
                 const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
-                const codigo_cliente = props.codigo_cliente || '';
-                const address = props.address || '';
-                const inscricao_estadual = props.inscricao_estadual || '';
-                console.log(props.cnpj);
-                console.log(props.codigo_cliente);
                 
                 li.textContent = `${props.name || 'Nome não disponível'}${localizacao}${cnpj}`;
                 
@@ -394,13 +402,11 @@
             const props = data.properties;
             document.getElementById('name').textContent = props.name || 'Não informado';
             document.getElementById('cnpj').textContent = props.cnpj_inteiro ? formatCNPJ(props.cnpj_inteiro) : 'Não informado';
+            document.getElementById('codigo_cliente').textContent = props.codigo_cliente || 'Não informado';
             document.getElementById('city').textContent = props.city || 'Não informado';
             document.getElementById('state').textContent = props.state || 'Não informado';
             document.getElementById('phone').textContent = props.phone || 'Não informado';
             document.getElementById('email').textContent = props.email || 'Não informado';
-            document.getElementById('codigo_cliente').textContent = props.codigo_cliente || 'Não informado';
-            document.getElementById('address').textContent = props.address || 'Não informado';
-            document.getElementById('inscricao_estadual').textContent = props.inscricao_estadual || 'Não informado';
         }
     
         // Mostra mensagens de erro
