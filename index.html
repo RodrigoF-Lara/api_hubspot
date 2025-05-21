@@ -219,6 +219,11 @@
   </div>
 
   <div class="info-item">
+    <span class="label">🧾 Insc.Est.:</span>
+    <span id="inscricao_estadual">-</span>
+  </div>
+
+  <div class="info-item">
     <span class="label">🗺️ Estado:</span>
     <span id="state">-</span>
   </div>
@@ -326,6 +331,7 @@
                 const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
                 const codigo_cliente = props.codigo_cliente || '';
                 const address = props.address || '';
+                const inscricao_estadual = props.inscricao_estadual || '';
                 console.log(props.cnpj);
                 console.log(props.codigo_cliente);
                 
@@ -394,6 +400,7 @@
             document.getElementById('email').textContent = props.email || 'Não informado';
             document.getElementById('codigo_cliente').textContent = props.codigo_cliente || 'Não informado';
             document.getElementById('address').textContent = props.address || 'Não informado';
+            document.getElementById('inscricao_estadual').textContent = props.inscricao_estadual || 'Não informado';
         }
     
         // Mostra mensagens de erro
