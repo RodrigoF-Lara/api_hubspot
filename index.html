@@ -110,7 +110,7 @@
             margin-top: 1rem;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            background: gray;
+            background: rgb(224, 221, 221);
             max-height: 200px;
             overflow-y: auto;
         }
@@ -346,6 +346,7 @@
         function displayResults(results) {
             const list = document.getElementById('resultsList');
             list.innerHTML = '';
+            list.style.display = 'block';
 
             if (results.length === 0) {
                 list.innerHTML = '<li class="result-item">Nenhuma empresa encontrada</li>';
@@ -410,6 +411,10 @@
                 
                 const data = await response.json();
                 displayCompanyDetails(data);
+
+                document.getElementById('resultsList').innerHTML = '';
+                document.getElementById('resultsList').style.display = 'none';
+
             } catch (error) {
                 showError(`Erro ao carregar detalhes: ${error.message}`);
             }
