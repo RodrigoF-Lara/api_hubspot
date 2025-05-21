@@ -15,7 +15,7 @@ const getHubspotToken = () => {
     console.error('ERRO: Token do HubSpot não encontrado nas variáveis de ambiente');
     return null;
   }
-  return token;
+  return token.trim(); // Remove espaços extras, se houver
 };
 
 // Health Check
@@ -29,7 +29,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Rota de busca corrigida
+// Função para verificar se o input é um CNPJ
+function isCNPJ(input) {
+  // Remove caracteres não numéricos
+  const cnpj = input.replace(/[^\d]/g, '');
+  
+  // Verifica se tem entre 8 e 14 dígitos (aceitamos CNPJs parciais também)
+  return /^\d{8,14}$/.test(cnpj);
+}
+
+// Rota de busca aprimorada para nome ou CNPJ
 app.post('/api/search', async (req, res) => {
   try {
     const token = getHubspotToken();
@@ -47,6 +56,29 @@ app.post('/api/search', async (req, res) => {
       });
     }
 
+    // Determina se o termo de busca é um CNPJ ou nome
+    const isCnpjSearch = isCNPJ(searchTerm);
+    
+    // Cria o filtro apropriado com base no tipo de busca
+    const filterGroups = [{
+      filters: [{
+        propertyName: isCnpjSearch ? "cnpj_inteiro" : "name",
+        operator: "CONTAINS_TOKEN",
+        value: searchTerm
+      }]
+    }];
+
+    // Se for CNPJ, adiciona um segundo filtro para buscar por CNPJ formatado também
+    if (isCnpjSearch) {
+      filterGroups.push({
+        filters: [{
+          propertyName: "cnpj",
+          operator: "CONTAINS_TOKEN",
+          value: searchTerm
+        }]
+      });
+    }
+
     const hubspotResponse = await fetch('https://api.hubapi.com/crm/v3/objects/companies/search', {
       method: 'POST',
       headers: {
@@ -54,14 +86,8 @@ app.post('/api/search', async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        filterGroups: [{
-          filters: [{
-            propertyName: "name",
-            operator: "CONTAINS_TOKEN",
-            value: searchTerm
-          }]
-        }],
-        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro"],
+        filterGroups: filterGroups,
+        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj"],
         limit: 10
       })
     });
@@ -105,7 +131,7 @@ app.get('/company/:id', async (req, res) => {
     }
 
     const hubspotResponse = await fetch(
-      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro`,
+      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro,cnpj`,
       {
         headers: {
           'Authorization': `Bearer ${token}`
