@@ -214,13 +214,17 @@
                 <span id="cnpj">-</span>
             </div>
             <div class="info-item">
-                <span class="label">Cidade:</span>
-                <span id="city">-</span>
-            </div>
-            <div class="info-item">
                 <span class="label">Estado:</span>
                 <span id="state">-</span>
             </div>
+            <div class="info-item">
+                <span class="label">Cidade:</span>
+                <span id="city">-</span>
+             </div>
+             <div class="info-item">
+                <span class="label">Enderço:</span>
+                <span id="address">-</span>
+             </div>
             <div class="info-item">
                 <span class="label">Telefone:</span>
                 <span id="phone">-</span>
@@ -311,6 +315,7 @@
                 const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
                 const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
                 const codigo_cliente = props.codigo_cliente || '';
+                const address = props.address || '';
                 console.log(props.cnpj);
                 console.log(props.codigo_cliente);
                 
@@ -378,6 +383,7 @@
             document.getElementById('phone').textContent = props.phone || 'Não informado';
             document.getElementById('email').textContent = props.email || 'Não informado';
             document.getElementById('codigo_cliente').textContent = props.codigo_cliente || 'Não informado';
+            document.getElementById('address').textContent = props.address || 'Não informado';
         }
     
         // Mostra mensagens de erro
