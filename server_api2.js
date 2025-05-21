@@ -87,7 +87,7 @@ app.post('/api/search', async (req, res) => {
       },
       body: JSON.stringify({
         filterGroups: filterGroups,
-        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj"],
+        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro", "cnpj","codigo_cliente"],
         limit: 10
       })
     });
