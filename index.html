@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+    <title>Busca de Empresas</title>
+    <script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=s7D3rIzZgM68knmbs7ou1iivUonhiBpU6H5Jy0AQzp9OeL-L77p98WvztOkbpcC9_J_g1dl72QFuGe2OsfVygkNmymyODEYfGWv4x1JMzY5mNGZak05y_MWuquXdizITd2e8BFKgHsDcA0jH83te1E4h_P67dCWUVgL7rTGIgPCwdMB2BGckj2iw4Vd12JspHxI4pZ_7f9IJYo95f9dbmuUlWZKfOhpaDbliX1IQUwAo50ITQIHUYG-XYOFFqOT-lRPKhxTWP7Lvsz22PQmIG2C4jFq0HgArmaAaOzoIRkiVp7bjwwCl7xkpNc9qux7P3Zi6Ou0zTW7SAoJIHY1fqn_N8CiANCmR2y1OfTQdAkgz0tW6VjkdEIBebbajP34RPckz5te0dfCH7uuHfA4A2guE3dc8w9AndDUb7eisTHhsGAg2befLKWgiw-o6eO6mUfWN5khyiHSczrl3cLRBdpaaHzZQXWyDWb2lxHDuZ4ths6zWbtjB2JdnQIeWmHKitYen5bTZbOGTlsd_DeG6P3Exe_b7995JFIckWQbse2D66Y-k3t2xIYfXyToEG2VOAfkUKHflQGMAfBaP7enSnUBOjlFqGJtla1ADRqUBFiEhmrwN0y9o_65s3z8I_os-1wah7xsH5TvGlgJSONfpSAX0p4MXygcCzlIZcgiOjLvaiZP_B3Xq4mqgS1LVnQFDGD0Ma2uFgNlz5yQaG7GM1NnproVTkEPAAuoXoTM-GfiLaKsjMVT4d0IYUSHlL55kFAHpzfiyHm4dqVvcInNnCioc0u-o9U8_68KwozVXOX8X1FNNNxwSoQacr4Vsmel_A3bblVdoTkvkEnFJJEDbw-0ll3yoRwUHRMvykY59SJY" charset="UTF-8"></script><style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+    
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+    
+        h1 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+    
+        /* Campo de Busca */
+        #searchInput {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    
+        #searchInput:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+    
+        #searchInput::placeholder {
+            color: #95a5a6;
+        }
+    
+        /* Lista de Resultados */
+        .results-list {
+            margin-top: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    
+        .result-item:last-child {
+            border-bottom: none;
+        }
+    
+        .result-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+    
+        .result-item::before {
+            content: "🏢";
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+    
+        /* Detalhes da Empresa */
+        .selected-company {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+    
+        .info-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            align-items: center;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+    
+        .label {
+            color: #3498db;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    
+        /* Scrollbar Customizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+    
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+    
+        ::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 4px;
+        }
+    
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3498db;
+        }
+    
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        /* Mensagens de Erro */
+        .error {
+            background: #ffeef0;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border: 1px solid #ffd6d9;
+            font-weight: 500;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Busca de Empresas</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Digite parte do nome da empresa...">
+            <ul id="resultsList" class="results-list"></ul>
+        </div>
+
+        <div id="selectedCompany" class="selected-company" style="display: none;">
+            <h2>Dados da Empresa Selecionada</h2>
+            <div class="info-item">
+                <span class="label">Nome:</span>
+                <span id="name">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">CNPJ:</span>
+                <span id="cnpj">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Cidade:</span>
+                <span id="city">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Estado:</span>
+                <span id="state">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Telefone:</span>
+                <span id="phone">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">E-mail:</span>
+                <span id="email">-</span>
+            </div>
+        </div>
+
+        <div id="error-message" class="error"></div>
+    </div>
+
+    <script>
+        // URL da API - será substituída pela URL do Vercel após o deploy
+        //'https://seu-app.vercel.app';
+        const API_URL = 'http://localhost:3000'; 
+        
+        let timeoutId;
+            
+        // Função de busca com debounce (aguarda 300ms após digitação)
+        function handleSearch() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(async () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                
+                if (searchTerm.length < 3) {
+                    document.getElementById('resultsList').innerHTML = '';
+                    return;
+                }
+    
+                try {
+                    const response = await fetch(`${API_URL}/api/search`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ searchTerm })
+                    });
+    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+                    }
+                    
+                    const results = await response.json();
+                    displayResults(results);
+                } catch (error) {
+                    showError(`Erro na busca: ${error.message}`);
+                }
+            }, 300);
+        }
+    
+        // Exibe os resultados da busca
+        function displayResults(results) {
+            const list = document.getElementById('resultsList');
+            list.innerHTML = '';
+
+            if (results.length === 0) {
+                list.innerHTML = '<li class="result-item">Nenhuma empresa encontrada</li>';
+                return;
+            }
+
+            results.forEach(company => {
+                const li = document.createElement('li');
+                li.className = 'result-item';
+                
+                // Montagem do texto com mais informações
+                const props = company.properties;
+                const cidade = props.city ? `${props.city}/` : '';
+                const estado = props.state || '';
+                const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
+                
+                li.textContent = `${props.name || 'Nome não disponível'}${localizacao}`;
+                
+                li.onclick = () => loadCompanyDetails(company.id);
+                list.appendChild(li);
+            });
+        }
+    
+        // Carrega detalhes da empresa selecionada
+        async function loadCompanyDetails(companyId) {
+            try {
+                const response = await fetch(`${API_URL}/company/${companyId}`);
+                
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                
+                const data = await response.json();
+                displayCompanyDetails(data);
+            } catch (error) {
+                showError(`Erro ao carregar detalhes: ${error.message}`);
+            }
+        }
+    
+        // Exibe os detalhes da empresa selecionada
+        function displayCompanyDetails(data) {
+            document.getElementById('selectedCompany').style.display = 'block';
+            
+            const props = data.properties;
+            document.getElementById('name').textContent = props.name || 'Não informado';
+            document.getElementById('cnpj').textContent = props.cnpj_inteiro || 'Não informado';
+            document.getElementById('city').textContent = props.city || 'Não informado';
+            document.getElementById('state').textContent = props.state || 'Não informado';
+            document.getElementById('phone').textContent = props.phone || 'Não informado';
+            document.getElementById('email').textContent = props.email || 'Não informado';
+        }
+    
+        // Mostra mensagens de erro
+        function showError(message) {
+            console.error(message);
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Limpa o erro após 5 segundos
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+    
+        // Configura o evento de input no campo de busca
+        document.getElementById('searchInput').addEventListener('input', handleSearch);
+    </script>
+</body>
+</html>

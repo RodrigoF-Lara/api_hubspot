@@ -1,0 +1,116 @@
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch');
+const app = express();
+
+// Configuração essencial
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Health Check
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'online', 
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
+// Rota de busca corrigida
+app.post('/api/search', async (req, res) => {
+  try {
+    const { searchTerm } = req.body;
+
+    if (!searchTerm || searchTerm.trim().length < 3) {
+      return res.status(400).json({
+        error: "O termo de busca deve conter pelo menos 3 caracteres"
+      });
+    }
+
+    const hubspotResponse = await fetch('https://api.hubapi.com/crm/v3/objects/companies/search', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-bd7ee904-14c6-4133-a008-1d2472ed509c'}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filterGroups: [{
+          filters: [{
+            propertyName: "name",
+            operator: "CONTAINS_TOKEN",
+            value: searchTerm
+          }]
+        }],
+        properties: ["name", "city", "state", "phone", "email", "cnpj_inteiro"],
+        limit: 10
+      })
+    });
+
+    if (!hubspotResponse.ok) {
+      const error = await hubspotResponse.json();
+      return res.status(hubspotResponse.status).json({
+        source: 'hubspot',
+        error: error.message || 'Erro desconhecido na API HubSpot'
+      });
+    }
+
+    const data = await hubspotResponse.json();
+    res.json(data.results || []);
+
+  } catch (error) {
+    console.error('Erro crítico:', error);
+    res.status(500).json({
+      error: 'Erro interno do servidor',
+      details: process.env.NODE_ENV === 'production' ? undefined : error.message
+    });
+  }
+});
+
+// Rota de detalhes com validação
+app.get('/company/:id', async (req, res) => {
+  try {
+    const companyId = req.params.id;
+
+    if (!/^\d+$/.test(companyId)) {
+      return res.status(400).json({
+        error: "ID da empresa inválido"
+      });
+    }
+
+    const hubspotResponse = await fetch(
+      `https://api.hubapi.com/crm/v3/objects/companies/${companyId}?properties=name,city,state,phone,email,cnpj_inteiro`,
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.HUBSPOT_TOKEN || 'pat-na1-bd7ee904-14c6-4133-a008-1d2472ed509c'}`
+        }
+      }
+    );
+
+    if (!hubspotResponse.ok) {
+      const error = await hubspotResponse.json();
+      return res.status(hubspotResponse.status).json({
+        source: 'hubspot',
+        error: error.message || 'Erro desconhecido na API HubSpot'
+      });
+    }
+
+    const data = await hubspotResponse.json();
+    res.json(data);
+
+  } catch (error) {
+    console.error('Erro crítico:', error);
+    res.status(500).json({
+      error: 'Erro interno do servidor',
+      details: process.env.NODE_ENV === 'production' ? undefined : error.message
+    });
+  }
+});
+
+// Iniciar servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Servidor operacional na porta ${PORT}`);
+  console.log(`• Health Check: http://localhost:${PORT}/api/health`);
+  console.log(`• Modo: ${process.env.NODE_ENV || 'desenvolvimento'}`);
+});
