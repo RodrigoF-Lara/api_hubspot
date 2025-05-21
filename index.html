@@ -52,6 +52,30 @@
         #searchInput::placeholder {
             color: #95a5a6;
         }
+        
+        /* Seletor de Tipo de Busca */
+        .search-type {
+            display: flex;
+            margin: 1rem 0;
+            gap: 1rem;
+        }
+        
+        .search-type label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .search-type label:hover {
+            background: #f0f0f0;
+        }
+        
+        .search-type input {
+            margin-right: 0.5rem;
+        }
     
         /* Lista de Resultados */
         .results-list {
@@ -159,7 +183,23 @@
         <h1>Busca de Empresas</h1>
         
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Digite parte do nome da empresa...">
+            <input type="text" id="searchInput" placeholder="Digite nome da empresa ou CNPJ...">
+            
+            <div class="search-type">
+                <label>
+                    <input type="radio" name="searchType" value="auto" checked>
+                    Automático (Nome ou CNPJ)
+                </label>
+                <label>
+                    <input type="radio" name="searchType" value="name">
+                    Nome
+                </label>
+                <label>
+                    <input type="radio" name="searchType" value="cnpj">
+                    CNPJ
+                </label>
+            </div>
+            
             <ul id="resultsList" class="results-list"></ul>
         </div>
 
@@ -265,12 +305,28 @@
                 const cidade = props.city ? `${props.city}/` : '';
                 const estado = props.state || '';
                 const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
+                const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
                 
-                li.textContent = `${props.name || 'Nome não disponível'}${localizacao}`;
+                li.textContent = `${props.name || 'Nome não disponível'}${localizacao}${cnpj}`;
                 
                 li.onclick = () => loadCompanyDetails(company.id);
                 list.appendChild(li);
             });
+        }
+        
+        // Formata CNPJ para exibição
+        function formatCNPJ(cnpj) {
+            if (!cnpj) return '';
+            
+            // Remove caracteres não numéricos
+            cnpj = cnpj.replace(/\D/g, '');
+            
+            // Aplica a máscara do CNPJ: XX.XXX.XXX/XXXX-XX
+            if (cnpj.length === 14) {
+                return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            }
+            
+            return cnpj;
         }
     
         // Carrega detalhes da empresa selecionada
@@ -309,7 +365,7 @@
             
             const props = data.properties;
             document.getElementById('name').textContent = props.name || 'Não informado';
-            document.getElementById('cnpj').textContent = props.cnpj_inteiro || 'Não informado';
+            document.getElementById('cnpj').textContent = props.cnpj_inteiro ? formatCNPJ(props.cnpj_inteiro) : 'Não informado';
             document.getElementById('city').textContent = props.city || 'Não informado';
             document.getElementById('state').textContent = props.state || 'Não informado';
             document.getElementById('phone').textContent = props.phone || 'Não informado';
