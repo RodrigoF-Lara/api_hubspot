@@ -310,6 +310,7 @@
                 const estado = props.state || '';
                 const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
                 const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
+                const codigo_cliente = props.codigo_cliente || '';
                 
                 li.textContent = `${props.name || 'Nome não disponível'}${localizacao}${cnpj}`;
                 
