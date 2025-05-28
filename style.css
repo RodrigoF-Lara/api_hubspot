@@ -62,6 +62,8 @@
             padding: 2.5rem;
             box-shadow: var(--shadow-lg);
             width: 100%;
+            margin-bottom: 30px;
+            padding-top: 50px;
         }
 
         /* Cabeçalho */
@@ -122,6 +124,7 @@
             border: 1px solid var(--gray-light);
             box-shadow: var(--shadow-md);
             transition: var(--transition);
+            padding-top: 50px;
         }
 
         .search-container:hover {
