@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+
+    <title>Busca de Empresas e CNPJ</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="header">
+            <h1><i class="fas fa-search"></i> Busca Integrada</h1>
+            <div class="logos">
+                <!-- Logo HubSpot -->
+                <img src="data:image/jpeg;base64,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" alt="Marcher Logo" class="logo">
+                <img src="data:image/png;base64,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" alt="HubSpot Logo" class="logo">            </div>
+        </div>
+            </div>
+        </div>
+
+        <!-- Container HubSpot -->
+        <div class="hubspot-search-container">
+            <h2><i class="fab fa-hubspot"></i> Busca de Empresas</h2>
+            <div class="search-input-group">
+                <input type="text" id="searchInput" class="search-input" placeholder="Digite nome da empresa...">
+                <button id="clearButton" class="button clear-button"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
+
+            <ul id="resultsList" class="results-list" style="display: none;"></ul>
+            <div id="selectedCompany" class="details-section" style="display: none;">
+                 <h2><i class="fas fa-info-circle"></i> Detalhes da Empresa</h2>
+                 <div class="info-grid">
+                     <div class="info-item"><span class="label">Nome:</span><span class="value" id="name"></span></div>
+                     <div class="info-item"><span class="label">CNPJ:</span><span class="value" id="cnpj"></span></div>
+                     <div class="info-item"><span class="label">Código Cliente:</span><span class="value" id="codigo_cliente"></span></div>
+                     <div class="info-item"><span class="label">Cidade:</span><span class="value" id="city"></span></div>
+                     <div class="info-item"><span class="label">Estado:</span><span class="value" id="state"></span></div>
+                     <div class="info-item"><span class="label">Telefone:</span><span class="value" id="phone"></span></div>
+                     <div class="info-item"><span class="label">Email:</span><span class="value" id="email"></span></div>
+                 </div>
+            </div>
+            <div id="error-message" style="display: none;"></div>
+        </div>
+
+        <!-- Container CNPJ -->
+        <div class="cnpj-search-container">
+            <h2><i class="fas fa-file-invoice"></i> Consulta CNPJ (Receita Federal)</h2>
+            <div class="search-input-group">
+                <input type="text" id="cnpjInput" class="search-input" placeholder="Digite o CNPJ (apenas números)">
+                <button id="searchButtonCnpj" class="button search-button"><i class="fas fa-search"></i> Buscar</button>
+                <button id="clearButtonCnpj" class="button clear-button"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
+            <div id="cnpjDetails" class="details-section" style="display: none;">
+                <!-- Detalhes CNPJ serão inseridos aqui -->
+            </div>
+            <div id="messageCnpj" class="message" style="display: none;"></div>
+        </div>
+    </div> <!-- Fim .container -->
+
+    <script>
+        // URL da API - URL completa com protocolo HTTPS
+        const API_URL = 'https://api-hubspot.vercel.app';
+        const API_URL_CNPJ = 'https://publica.cnpj.ws/cnpj/';
+        
+        let timeoutId;
+            
+        // Função de busca com debounce (aguarda 300ms após digitação)
+        function handleSearch() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(async () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                
+                if (searchTerm.length < 3) {
+                    document.getElementById('resultsList').innerHTML = '';
+                    document.getElementById('resultsList').style.display = 'none';
+                    return;
+                }
+    
+                try {
+                    const response = await fetch(`${API_URL}/api/search`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ searchTerm })
+                    });
+    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        let errorMessage;
+                        
+                        try {
+                            // Tenta interpretar como JSON
+                            const errorData = JSON.parse(errorText);
+                            errorMessage = errorData.error || `Erro HTTP: ${response.status}`;
+                        } catch (e) {
+                            // Se não for JSON, usa o texto bruto ou status HTTP
+                            errorMessage = errorText.includes('<html>') 
+                                ? `Erro HTTP: ${response.status}` 
+                                : errorText;
+                        }
+                        
+                        throw new Error(errorMessage);
+                    }
+                    
+                    const results = await response.json();
+                    displayResults(results);
+                } catch (error) {
+                    showError(`Erro na busca: ${error.message}`);
+                }
+            }, 300);
+        }
+    
+        // Exibe os resultados da busca
+        function displayResults(results) {
+            const list = document.getElementById('resultsList');
+            list.innerHTML = '';
+            list.style.display = 'block';
+
+            if (results.length === 0) {
+                list.innerHTML = '<li class="result-item">Nenhuma empresa encontrada</li>';
+                return;
+            }
+
+            results.forEach(company => {
+                const li = document.createElement('li');
+                li.className = 'result-item';
+                
+                // Montagem do texto com mais informações
+                const props = company.properties;
+                const cidade = props.city ? `${props.city}/` : '';
+                const estado = props.state || '';
+                const localizacao = cidade || estado ? ` - ${cidade}${estado}` : '';
+                const cnpj = props.cnpj_inteiro ? ` (CNPJ: ${formatCNPJ(props.cnpj_inteiro)})` : '';
+                
+                li.textContent = `${props.name || 'Nome não disponível'}${localizacao}${cnpj}`;
+                
+                li.onclick = () => loadCompanyDetails(company.id);
+                list.appendChild(li);
+            });
+        }
+        
+        // Formata CNPJ para exibição
+        function formatCNPJ(cnpj) {
+            if (!cnpj) return '';
+            
+            // Remove caracteres não numéricos
+            cnpj = cnpj.replace(/\D/g, '');
+            
+            // Aplica a máscara do CNPJ: XX.XXX.XXX/XXXX-XX
+            if (cnpj.length === 14) {
+                return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            }
+            
+            return cnpj;
+        }
+    
+        // Carrega detalhes da empresa selecionada
+        async function loadCompanyDetails(companyId) {
+            try {
+                const response = await fetch(`${API_URL}/company/${companyId}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage;
+                    
+                    try {
+                        // Tenta interpretar como JSON
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.error || `Erro HTTP: ${response.status}`;
+                    } catch (e) {
+                        // Se não for JSON, usa o texto bruto ou status HTTP
+                        errorMessage = errorText.includes('<html>') 
+                            ? `Erro HTTP: ${response.status}` 
+                            : errorText;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+                
+                const data = await response.json();
+                displayCompanyDetails(data);
+
+                document.getElementById('resultsList').innerHTML = '';
+                document.getElementById('resultsList').style.display = 'none';
+
+            } catch (error) {
+                showError(`Erro ao carregar detalhes: ${error.message}`);
+            }
+        }
+    
+        // Exibe os detalhes da empresa selecionada
+        function displayCompanyDetails(data) {
+            document.getElementById('selectedCompany').style.display = 'block';
+            
+            const props = data.properties;
+            document.getElementById('name').textContent = props.name || 'Não informado';
+            document.getElementById('cnpj').textContent = props.cnpj_inteiro ? formatCNPJ(props.cnpj_inteiro) : 'Não informado';
+            document.getElementById('codigo_cliente').textContent = props.codigo_cliente || 'Não informado';
+            document.getElementById('city').textContent = props.city || 'Não informado';
+            document.getElementById('state').textContent = props.state || 'Não informado';
+            document.getElementById('phone').textContent = props.phone || 'Não informado';
+            document.getElementById('email').textContent = props.email || 'Não informado';
+        }
+    
+        // Mostra mensagens de erro
+        function showError(message) {
+            console.error(message);
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Limpa o erro após 5 segundos
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Função para limpar a busca HubSpot
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('resultsList').innerHTML = '';
+            document.getElementById('resultsList').style.display = 'none';
+            document.getElementById('selectedCompany').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // --- Funções para Consulta CNPJ (API Pública) --- //
+        async function handleSearchCnpjPublic() {
+            const cnpjValue = document.getElementById('cnpjInput').value.replace(/\D/g, ''); // Remove não dígitos
+            const cnpjDetailsDiv = document.getElementById('cnpjDetails');
+            const messageCnpj = document.getElementById('messageCnpj');
+            
+            cnpjDetailsDiv.innerHTML = ''; // Limpa resultado anterior
+            cnpjDetailsDiv.style.display = 'none';
+            messageCnpj.style.display = 'none';
+
+            if (cnpjValue.length !== 14) {
+                showMessage(messageCnpj, 'Por favor, digite um CNPJ válido com 14 números.', 'error');
+                return;
+            }
+
+            showMessage(messageCnpj, 'Consultando CNPJ na Receita Federal...', 'loading');
+
+            try {
+                const response = await fetch(`${API_URL_CNPJ}${cnpjValue}`);
+
+                if (response.status === 404) {
+                     throw new Error('CNPJ não encontrado na base de dados.');
+                } else if (response.status === 429) {
+                    throw new Error('Muitas requisições. Tente novamente mais tarde.');
+                } else if (!response.ok) {
+                    const errorData = await response.json().catch(() => null); // Tenta pegar corpo do erro
+                    throw new Error(`Erro ${response.status}: ${errorData?.message || response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayCnpjDetails(data);
+                messageCnpj.style.display = 'none';
+
+            } catch (error) {
+                showMessage(messageCnpj, `Erro na consulta CNPJ: ${error.message}`, 'error');
+                cnpjDetailsDiv.style.display = 'none'; // Esconde a seção de detalhes em caso de erro
+            }
+        }
+
+        // Exibe os detalhes do CNPJ consultado
+        function displayCnpjDetails(data) {
+            const cnpjDetailsDiv = document.getElementById('cnpjDetails');
+            cnpjDetailsDiv.innerHTML = '<h2><i class="fas fa-file-alt"></i> Detalhes da Empresa (Receita)</h2>'; // Reinicia o conteúdo mantendo o título
+            const grid = document.createElement('div');
+            grid.className = 'info-grid';
+
+            // Função auxiliar para criar e adicionar um item de informação ao grid
+            function addInfoItem(label, value) {
+                if (value !== null && value !== undefined && value !== '') {
+                    const infoItem = document.createElement('div');
+                    infoItem.classList.add('info-item');
+                    infoItem.innerHTML = `<span class="label">${label}:</span><span class="value">${value}</span>`;
+                    grid.appendChild(infoItem);
+                }
+            }
+
+            // Adiciona os detalhes principais
+            addInfoItem('Razão Social', data.razao_social);
+            addInfoItem('Nome Fantasia', data.estabelecimento?.nome_fantasia);
+            addInfoItem('CNPJ', formatCNPJ(data.estabelecimento?.cnpj));
+            addInfoItem('Inscrição Estadual', data.estabelecimento?.inscricoes_estaduais?.[0]?.inscricao_estadual); // Pega a primeira IE
+            addInfoItem('Situação Cadastral', data.estabelecimento?.situacao_cadastral);
+            addInfoItem('Data Situação Cadastral', data.estabelecimento?.data_situacao_cadastral);
+            addInfoItem('Motivo Situação Cadastral', data.estabelecimento?.motivo_situacao_cadastral);
+            addInfoItem('Natureza Jurídica', data.natureza_juridica?.descricao);
+            addInfoItem('Porte', data.porte?.descricao);
+            addInfoItem('Capital Social', data.capital_social ? parseFloat(data.capital_social).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null);
+            addInfoItem('Logradouro', data.estabelecimento?.logradouro);
+            addInfoItem('Número', data.estabelecimento?.numero);
+            addInfoItem('Complemento', data.estabelecimento?.complemento);
+            addInfoItem('Bairro', data.estabelecimento?.bairro);
+            addInfoItem('CEP', data.estabelecimento?.cep ? formatCEP(data.estabelecimento.cep) : null);
+            addInfoItem('Município', data.estabelecimento?.cidade?.nome);
+            addInfoItem('Estado', data.estabelecimento?.estado?.sigla);
+            addInfoItem('Telefone', formatPhone(data.estabelecimento?.ddd1, data.estabelecimento?.telefone1));
+            addInfoItem('Email', data.estabelecimento?.email);
+            addInfoItem('Atividade Principal', data.estabelecimento?.atividade_principal?.descricao);
+
+            cnpjDetailsDiv.appendChild(grid); // Adiciona o grid com os itens
+
+            // Adiciona Atividades Secundárias se existirem
+            if (data.estabelecimento?.atividades_secundarias?.length > 0) {
+                 const secondaryActivitiesTitle = document.createElement('h3');
+                 secondaryActivitiesTitle.innerHTML = '<i class="fas fa-tasks"></i> Atividades Secundárias';
+                 cnpjDetailsDiv.appendChild(secondaryActivitiesTitle);
+                 const secondaryGrid = document.createElement('div');
+                 secondaryGrid.className = 'info-grid'; // Reutiliza o grid
+                 data.estabelecimento.atividades_secundarias.forEach(act => {
+                     addInfoItem(act.subclasse || 'Atividade', act.descricao || 'Não informado');
+                 });
+                 cnpjDetailsDiv.appendChild(secondaryGrid);
+            }
+
+            // Adiciona Quadro de Sócios e Administradores (QSA)
+            if (data.socios?.length > 0) {
+                const sociosTitle = document.createElement('h3');
+                sociosTitle.innerHTML = '<i class="fas fa-users"></i> Quadro Societário (QSA)';
+                cnpjDetailsDiv.appendChild(sociosTitle);
+                const sociosGrid = document.createElement('div');
+                sociosGrid.className = 'info-grid'; // Reutiliza o grid
+
+                data.socios.forEach(socio => {
+                    const socioItem = document.createElement('div');
+                    socioItem.classList.add('info-item');
+                    socioItem.innerHTML = `
+                        <span class="label">${socio.qualificacao_socio?.descricao || 'Sócio'}:</span>
+                        <span class="value">
+                            <div>${socio.nome || 'Nome não informado'}</div>
+                            <div class="socio-details">CPF/CNPJ: ${formatCpfCnpjSocio(socio.cpf_cnpj_socio) || 'Não informado'}</div>
+                            ${socio.nome_representante_legal ? `<div class="socio-details">Representante: ${socio.nome_representante_legal} (${socio.qualificacao_representante_legal?.descricao || ''})</div>` : ''}
+                        </span>
+                    `;
+                    sociosGrid.appendChild(socioItem);
+                });
+                 cnpjDetailsDiv.appendChild(sociosGrid);
+            }
+
+            cnpjDetailsDiv.style.display = 'block';
+        }
+
+        // Função para limpar a busca CNPJ
+        function clearCnpjSearch() {
+            document.getElementById('cnpjInput').value = '';
+            document.getElementById('cnpjDetails').innerHTML = ''; // Limpa completamente a div de detalhes
+            document.getElementById('cnpjDetails').style.display = 'none';
+            document.getElementById('messageCnpj').style.display = 'none';
+        }
+
+        // Formata CEP: XXXXX-XXX
+        function formatCEP(cep) {
+            if (!cep) return null;
+            const cepString = String(cep).replace(/\D/g, '');
+            if (cepString.length !== 8) return cep;
+            return cepString.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+
+        // Formata Telefone: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+        function formatPhone(ddd, phone) {
+            if (!ddd || !phone) return null;
+            const phoneString = String(phone).replace(/\D/g, '');
+            if (phoneString.length === 8) {
+                 return `(${ddd}) ${phoneString.substring(0, 4)}-${phoneString.substring(4)}`;
+            } else if (phoneString.length === 9) {
+                 return `(${ddd}) ${phoneString.substring(0, 5)}-${phoneString.substring(5)}`;
+            }
+            return `(${ddd}) ${phoneString}`;
+        }
+
+        // Formata CPF/CNPJ do Sócio (com máscara simples)
+        function formatCpfCnpjSocio(doc) {
+            if (!doc) return 'Não informado';
+            const docString = String(doc).replace(/\D/g, '');
+            if (docString.length === 11) { // CPF
+                return `${docString.substring(0, 3)}.***.***-${docString.substring(9, 11)}`;
+            } else if (docString.length === 14) { // CNPJ
+                return formatCNPJ(docString);
+            } else {
+                return doc; // Retorna original se não for CPF ou CNPJ padrão
+            }
+        }
+
+        // Função para exibir mensagens
+        function showMessage(element, text, type) {
+            element.textContent = text;
+            element.className = `message ${type}`;
+            element.style.display = 'flex'; // Usa flex para alinhar ícone
+            let iconClass = '';
+            if (type === 'loading') iconClass = 'fas fa-spinner fa-spin';
+            else if (type === 'error') iconClass = 'fas fa-exclamation-circle';
+            else if (type === 'success') iconClass = 'fas fa-check-circle';
+            if (iconClass) {
+                 element.innerHTML = `<i class="${iconClass}"></i> ${text}`;
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('searchInput').addEventListener('input', handleSearch);
+        document.getElementById('clearButton').addEventListener('click', clearSearch);
+
+        document.getElementById('searchButtonCnpj').addEventListener('click', handleSearchCnpjPublic);
+        document.getElementById('cnpjInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                handleSearchCnpjPublic();
+            }
+        });
+        document.getElementById('clearButtonCnpj').addEventListener('click', clearCnpjSearch);
+    </script>
+</body>
+</html>
